@@ -1,0 +1,14 @@
+# Python virtual environment
+Python/dl_env/
+
+# Byte-compiled files
+__pycache__/
+*.pyc
+
+
+
+
+# Large data files
+*.csv
+*.h5
+*.pkl
