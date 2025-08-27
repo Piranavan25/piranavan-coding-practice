@@ -72,3 +72,36 @@ def predict():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'healthy'})
+
+@app.route('/test', methods=['GET'])
+def test_model():
+    """Test the model with a simple example"""
+    try:
+        # Create a simple test image (number 7)
+        test_image = np.zeros((28, 28))
+        test_image[5:20, 5:10] = 255  # Vertical line
+        test_image[5:10, 10:20] = 255  # Horizontal line
+        
+        # Preprocess
+        test_image = test_image / 255.0
+        test_image = test_image.reshape(1, 784)
+        
+        # Predict
+        predictions = model.predict(test_image)
+        predicted_digit = np.argmax(predictions[0])
+        confidence = np.max(predictions[0])
+        
+        return jsonify({
+            'test_prediction': int(predicted_digit),
+            'test_confidence': float(confidence),
+            'all_predictions': predictions[0].tolist()
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
