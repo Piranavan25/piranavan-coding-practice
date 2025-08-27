@@ -5,6 +5,23 @@ Python/dl_env/
 __pycache__/
 *.pyc
 
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+dl_env/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
 
 
 
