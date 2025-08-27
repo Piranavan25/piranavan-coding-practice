@@ -32,3 +32,43 @@ def preprocess_image(image):
     
     return img_array
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Check if image was provided
+        if 'image' not in request.files:
+            # Check if image was sent as base64 in form data
+            if 'image' not in request.form:
+                return jsonify({'error': 'No image provided'}), 400
+            else:
+                # Handle base64 image
+                image_data = request.form['image']
+                header, encoded = image_data.split(",", 1)
+                image_bytes = base64.b64decode(encoded)
+                img = Image.open(io.BytesIO(image_bytes))
+        else:
+            # Handle file upload
+            file = request.files['image']
+            img = Image.open(io.BytesIO(file.read()))
+        
+        # Preprocess the image
+        processed_image = preprocess_image(img)
+        
+        # Make prediction
+        predictions = model.predict(processed_image)
+        predicted_digit = np.argmax(predictions[0])
+        confidence = np.max(predictions[0])
+        
+        # Debug output
+        print(f"Predicted digit: {predicted_digit}")
+        print(f"Confidence: {confidence}")
+        
+        return jsonify({
+            'prediction': int(predicted_digit),
+            'confidence': float(confidence)
+        })
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
