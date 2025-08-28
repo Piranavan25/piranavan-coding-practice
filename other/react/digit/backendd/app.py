@@ -24,7 +24,7 @@ def preprocess_image(image):
     
     # Invert colors if needed (black digits on white background to white on black)
     # MNIST has white digits on black background
-    img_array = 255 - img_array
+    #img_array = 255 - img_array
     
     # Normalize and reshape for the model
     img_array = img_array / 255.0
